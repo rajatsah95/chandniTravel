@@ -142,12 +142,12 @@ const router = useRouter();
       <div className="bg-white shadow-md rounded-xl p-6 grid md:grid-cols-3 gap-6">
         <div>
           <label className="mb-1 font-medium text-sm">Source City</label>
-        <input name="source" placeholder="Source (DEL)" className="border p-2 rounded"
+        <input name="source" placeholder="Source (del)" className="border p-2 rounded"
           value={filters.source} onChange={handleChange} />
           </div>
          <div>
           <label className="mb-1 font-medium text-sm">Destination City</label>
-        <input name="destination" placeholder="Destination (BOM)" className="border p-2 rounded"
+        <input name="destination" placeholder="Destination (shj)" className="border p-2 rounded"
           value={filters.destination} onChange={handleChange} />
           </div>
         <div>

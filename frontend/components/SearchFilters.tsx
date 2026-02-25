@@ -1,7 +1,3 @@
-// export default function SearchFilters() {
-//   return <div>Search Filters Component</div>;
-// }
-
 "use client";
 
 import { useState } from "react";

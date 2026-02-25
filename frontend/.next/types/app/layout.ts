@@ -1,4 +1,4 @@
-// File: D:\rajat files\chandniTravels\flight-booking-app\frontend\app\layout.tsx
+// File: D:\rajat files\chandaniTravel3\chandniTravel\frontend\app\layout.tsx
 import * as entry from '../../../app/layout.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 

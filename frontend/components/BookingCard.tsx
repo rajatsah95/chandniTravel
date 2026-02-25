@@ -5,55 +5,78 @@ interface Props {
 }
 
 export default function BookingCard({ booking }: Props) {
-  // ✅ Guard clause – prevents crash
-  if (!booking?.flight?.flights?.length) {
-    return (
-      <div className="border rounded-xl p-4 shadow-md bg-white">
-        <p className="text-gray-500">Loading booking...</p>
-      </div>
-    );
+  if (!booking || !booking.flight) {
+    return null;
   }
 
-  const flights = booking.flight.flights;
-  const firstFlight = flights[0];
-  const lastFlight = flights[flights.length - 1];
+  
+  const flightGroups = Array.isArray(booking.flight)
+    ? booking.flight.filter(Boolean) 
+    : [booking.flight];
 
-  const departure = firstFlight.departureAirport;
-  const arrival = lastFlight.arrivalAirport;
-
-  const airlineCode =
-    booking.flight.otherDetails?.airline?.[0] ?? "N/A";
-
-  const departureTime =
-    booking.flight.otherDetails?.departureTime;
-
-  const totalStops =
-    booking.flight.otherDetails?.totalStops ?? 0;
+  if (!flightGroups.length) return null;
 
   const price = booking.priceLocked ?? 0;
 
   return (
-    <div className="border rounded-xl p-4 shadow-md bg-white">
-      <h3 className="text-lg font-semibold">
-        Airline: {airlineCode}
+    <div className="border rounded-xl p-4 shadow-md bg-white m-2" style={{border:"1px solid", padding:"10px",margin:"10px"}}>
+      <h3 className="text-lg font-semibold mb-3">
+        Passenger: {booking.traveller?.name}
       </h3>
 
-      <p className="text-gray-600">
-        {departure?.code} → {arrival?.code}
-      </p>
+      {flightGroups.map((flightGroup: any, index: number) => {
+        if (!flightGroup?.flights || !Array.isArray(flightGroup.flights)) {
+          return null;
+        }
 
-      <p>
-        Departure:{" "}
-        {departureTime
-          ? new Date(departureTime).toLocaleString()
-          : "N/A"}
-      </p>
+        const flights = flightGroup.flights;
+        if (!flights.length) return null;
 
-      <p>
-        Stops: {totalStops === 0 ? "Non-stop" : `${totalStops} Stop`}
-      </p>
+        const firstFlight = flights[0];
+        const lastFlight = flights[flights.length - 1];
 
-      <p>Passenger: {booking.traveller?.name}</p>
+        const departure = firstFlight?.departureAirport;
+        const arrival = lastFlight?.arrivalAirport;
+
+        const airlineCode =
+          flightGroup?.otherDetails?.airline?.[0] ?? "N/A";
+
+        const departureTime =
+          flightGroup?.otherDetails?.departureTime;
+
+        const totalStops =
+          flightGroup?.otherDetails?.totalStops ?? 0;
+
+        return (
+          <div
+            key={index}
+            className="mb-4 p-3 rounded-lg bg-gray-50 border"
+          >
+            <p className="font-semibold">
+              Airline: {airlineCode}
+            </p>
+
+            <p>
+              {departure?.code ?? "N/A"} →{" "}
+              {arrival?.code ?? "N/A"}
+            </p>
+
+            <p>
+              Departure:{" "}
+              {departureTime
+                ? new Date(departureTime).toLocaleString()
+                : "N/A"}
+            </p>
+
+            <p>
+              Stops:{" "}
+              {totalStops === 0
+                ? "Non-stop"
+                : `${totalStops} Stop`}
+            </p>
+          </div>
+        );
+      })}
 
       <p className="font-bold text-blue-600 mt-2">
         ₹{price}

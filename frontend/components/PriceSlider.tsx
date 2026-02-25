@@ -1,7 +1,3 @@
-// export default function PriceSlider() {
-//   return <div>Price Slider Component</div>;
-// }
-
 "use client";
 
 interface Props {

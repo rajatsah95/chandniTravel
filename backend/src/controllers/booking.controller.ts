@@ -1,18 +1,54 @@
 import { v4 as uuid } from "uuid";
 import Booking from "../models/Booking";
-import SelectedFlight from "../models/SelectedFlight";
+import flightsData from "../data/flights.json";
 
 export const createBooking = async (req: any, res: any) => {
-  const { searchId, traveller } = req.body;
+  const { searchId, traveller,flightKey,priceLocked } = req.body;
 
-  const selected = await SelectedFlight.findOne({ searchId });
+let selected:any=[]
+  if(flightKey.includes(","))
+  {
+
+    for(const ele of flightKey.split(","))
+    {
+     
+      selected=[...selected,ele]
+    }
+  }
+  else
+  {
+     selected = flightKey
+  }
+
+  const sectors = flightsData.data.result.sectors;
+ 
+let flight:any=[]
+  Object.values(sectors).forEach((sector: any) => {
+
+ if(Array.isArray(selected))
+  {
+    for(const ele of selected)
+    {
+      
+      if (sector[ele])
+      flight=[...flight,sector[ele]]
+    }
+  }
+  else
+  {
+    
+     if (sector[selected]) flight = sector[selected];
+  }
+
+    
+  });
 
   const booking = await Booking.create({
     bookingId: uuid(),
     searchId,
     traveller,
-    priceLocked: selected?.selectedFare.price.pricePerAdult,
-    flight: selected?.fullFlightJson
+    priceLocked,
+    flight
   });
 
   res.json({

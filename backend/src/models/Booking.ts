@@ -11,8 +11,8 @@ const schema = new mongoose.Schema({
     gender: String,
     passport: String
   },
-  priceLocked: Number,
-  flight: Object,
+  priceLocked: mongoose.Schema.Types.Mixed,
+  flight: mongoose.Schema.Types.Mixed,
   createdAt: { type: Date, default: Date.now }
 });
 

@@ -4,21 +4,52 @@ import SelectedFlight from "../models/SelectedFlight";
 export const selectFlight = async (req: any, res: any) => {
   const { searchId, flightKey, fareId } = req.body;
 
-  const sectors = flightsData.data.result.sectors;
-  let selected: any;
 
+let selected:any=[]
+  if(flightKey.includes(","))
+  {
+
+    for(const ele of flightKey.split(","))
+    {
+      
+      selected=[...selected,ele]
+    }
+  }
+  else
+  {
+     selected = flightKey
+  }
+
+  const sectors = flightsData.data.result.sectors;
+ 
+let flight:any=[]
   Object.values(sectors).forEach((sector: any) => {
-    if (sector[flightKey]) selected = sector[flightKey];
+
+ if(Array.isArray(selected))
+  {
+    for(const ele of selected)
+    {
+      
+      if (sector[ele])
+      flight=[...flight,sector[ele]]
+    }
+  }
+  else
+  {
+    
+     if (sector[selected]) flight = sector[selected];
+  }
+
+    
   });
 
-  const fare = selected.fares.find((f: any) => f.fareId === fareId);
 
   const saved = await SelectedFlight.create({
     searchId,
     flightKey,
     fareId,
-    fullFlightJson: selected,
-    selectedFare: fare
+    fullFlightJson: flight,
+    
   });
 
   res.json(saved);
